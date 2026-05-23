@@ -1,0 +1,300 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>사회문제탐구 AI 도우미</title>
+
+  <style>
+
+    *{
+      box-sizing:border-box;
+    }
+
+    body{
+      margin:0;
+      padding:40px 20px;
+      background:#f4f6fb;
+      font-family:Pretendard, "Apple SD Gothic Neo", sans-serif;
+      color:#222;
+    }
+
+    .container{
+      max-width:900px;
+      margin:0 auto;
+    }
+
+    .title-box{
+      background:white;
+      border-radius:20px;
+      padding:30px;
+      margin-bottom:20px;
+      box-shadow:0 8px 24px rgba(0,0,0,0.06);
+    }
+
+    h1{
+      margin:0 0 10px;
+      font-size:30px;
+    }
+
+    .subtitle{
+      color:#666;
+      line-height:1.6;
+    }
+
+    .card{
+      background:white;
+      border-radius:20px;
+      padding:25px;
+      box-shadow:0 8px 24px rgba(0,0,0,0.06);
+      margin-bottom:20px;
+    }
+
+    textarea{
+      width:100%;
+      min-height:160px;
+      border:1px solid #d9dce5;
+      border-radius:14px;
+      padding:16px;
+      font-size:15px;
+      line-height:1.6;
+      resize:vertical;
+      outline:none;
+    }
+
+    textarea:focus{
+      border-color:#6b7cff;
+      box-shadow:0 0 0 3px rgba(107,124,255,0.15);
+    }
+
+    .buttons{
+      display:grid;
+      grid-template-columns:1fr 1fr;
+      gap:12px;
+      margin-top:16px;
+    }
+
+    button{
+      border:none;
+      border-radius:14px;
+      padding:16px;
+      font-size:15px;
+      font-weight:700;
+      cursor:pointer;
+      transition:0.15s;
+    }
+
+    button:hover{
+      transform:translateY(-1px);
+    }
+
+    .btn1{
+      background:#4d6fff;
+      color:white;
+    }
+
+    .btn2{
+      background:#222;
+      color:white;
+    }
+
+    .result{
+      background:#fafbff;
+      border:1px solid #e3e6f0;
+      border-radius:14px;
+      padding:18px;
+      min-height:200px;
+      white-space:pre-wrap;
+      line-height:1.7;
+    }
+
+    .notice{
+      margin-top:14px;
+      font-size:13px;
+      color:#666;
+      line-height:1.6;
+    }
+
+    @media(max-width:700px){
+
+      .buttons{
+        grid-template-columns:1fr;
+      }
+
+    }
+
+  </style>
+</head>
+
+<body>
+
+  <div class="container">
+
+    <div class="title-box">
+
+      <h1>사회문제탐구 AI 도우미</h1>
+
+      <div class="subtitle">
+        이 도구는 보고서를 대신 작성하는 AI가 아니라,<br>
+        자신의 관심사를 사회문제와 연결하고 연구 질문을 발전시키는 보조 교사입니다.
+      </div>
+
+    </div>
+
+    <div class="card">
+
+      <h3>관심사 · 해시태그 · 연구 질문 입력</h3>
+
+      <textarea
+        id="userInput"
+        placeholder="#수면부족 #숏폼중독 #입시스트레스
+
+왜 고등학생들은 수면 부족을 경험할까?"
+      ></textarea>
+
+      <div class="buttons">
+
+        <button class="btn1" onclick="askAI('connect')">
+          사회학 연결 도우미
+        </button>
+
+        <button class="btn2" onclick="askAI('evaluate')">
+          연구주제 평가 도우미
+        </button>
+
+      </div>
+
+    </div>
+
+    <div class="card">
+
+      <h3>AI 피드백</h3>
+
+      <div class="result" id="result">
+입력 후 원하는 버튼을 눌러주세요.
+      </div>
+
+      <div class="notice">
+        ※ AI의 답변은 참고용입니다.<br>
+        실제 기사·통계·자료는 반드시 직접 확인해야 합니다.
+      </div>
+
+    </div>
+
+  </div>
+
+  <script>
+
+    // 최종 API 주소
+    const API_ENDPOINT =
+      "https://project-6cov5.vercel.app/api/chat";
+
+    async function askAI(mode){
+
+      const input =
+        document.getElementById("userInput").value;
+
+      const result =
+        document.getElementById("result");
+
+      if(!input.trim()){
+
+        result.innerText =
+          "먼저 관심사나 연구 질문을 입력해주세요.";
+
+        return;
+
+      }
+
+      result.innerText =
+        "AI가 답변을 생성하고 있습니다...";
+
+      let systemPrompt = "";
+
+      // 사회학 연결 도우미
+      if(mode === "connect"){
+
+        systemPrompt = `
+너는 고등학교 사회문제탐구 수업의 보조 교사다.
+
+학생의 개인 경험이나 관심사를 사회문제와 연결해준다.
+
+보고서를 대신 작성하지 않는다.
+
+다음 형식으로 짧고 구체적으로 답한다.
+
+1. 연결 가능한 사회문제
+2. 사회와 연결되는 이유
+3. 더 생각해볼 질문
+`;
+
+      }
+
+      // 연구주제 평가 도우미
+      else if(mode === "evaluate"){
+
+        systemPrompt = `
+너는 고등학교 사회문제탐구 수업의 연구 질문 코치다.
+
+학생이 입력한 연구 질문을 평가하고 구체화 방향을 제안한다.
+
+보고서를 대신 작성하지 않는다.
+
+다음 기준으로 답한다.
+
+1. 사회적 중요성
+2. 조사 가능성
+3. 수행 가능성
+4. 연구 윤리
+5. 수정 방향 제안
+`;
+
+      }
+
+      try{
+
+        const response = await fetch(API_ENDPOINT, {
+
+          method:"POST",
+
+          headers:{
+            "Content-Type":"application/json"
+          },
+
+          body:JSON.stringify({
+            systemPrompt:systemPrompt,
+            studentInput:input
+          })
+
+        });
+
+        const data = await response.json();
+
+        // 오류 처리
+        if(data.error){
+
+          result.innerText =
+            "오류: " + data.error;
+
+          return;
+
+        }
+
+        result.innerText =
+          data.answer;
+
+      }
+
+      catch(error){
+
+        result.innerText =
+          "오류가 발생했습니다: " + error.message;
+
+      }
+
+    }
+
+  </script>
+
+</body>
+</html>
