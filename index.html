@@ -6,10 +6,7 @@
   <title>관심에서 사회문제로</title>
 
   <style>
-
-    *{
-      box-sizing:border-box;
-    }
+    *{ box-sizing:border-box; }
 
     body{
       margin:0;
@@ -39,9 +36,7 @@
       letter-spacing:-0.04em;
     }
 
-    h3{
-      margin-top:0;
-    }
+    h3{ margin-top:0; }
 
     .subtitle{
       color:#555;
@@ -96,6 +91,11 @@
       transform:translateY(-1px);
     }
 
+    button:disabled{
+      cursor:not-allowed;
+      transform:none;
+    }
+
     .btn1{
       background:#4d6fff;
       color:white;
@@ -134,35 +134,22 @@
     }
 
     @media(max-width:700px){
-
-      body{
-        padding:24px 14px;
-      }
+      body{ padding:24px 14px; }
 
       .title-box,
-      .card{
-        padding:22px;
-      }
+      .card{ padding:22px; }
 
-      h1{
-        font-size:26px;
-      }
+      h1{ font-size:26px; }
 
-      .buttons{
-        grid-template-columns:1fr;
-      }
-
+      .buttons{ grid-template-columns:1fr; }
     }
-
   </style>
 </head>
 
 <body>
-
   <div class="container">
 
     <div class="title-box">
-
       <h1>관심에서 사회문제로</h1>
 
       <div class="subtitle">
@@ -173,11 +160,9 @@
       <div class="credit">
         created by 연지T
       </div>
-
     </div>
 
     <div class="card">
-
       <h3>나의 관심사에서 사회문제 찾기</h3>
 
       <textarea
@@ -193,7 +178,6 @@
       </div>
 
       <div class="buttons">
-
         <button class="btn1" onclick="askAI('connect')">
           사회학으로 바라보기
         </button>
@@ -201,13 +185,10 @@
         <button class="btn2" onclick="askAI('evaluate')">
           사회문제로 연구 질문 만들기
         </button>
-
       </div>
-
     </div>
 
     <div class="card">
-
       <h3>AI 피드백</h3>
 
       <div class="result" id="result">
@@ -218,7 +199,6 @@
         ※ AI의 답변은 참고용입니다.<br>
         실제 기사·통계·자료는 반드시 직접 확인해야 합니다.
       </div>
-
     </div>
 
     <footer class="footer">
@@ -230,78 +210,68 @@
   </div>
 
   <script>
-
-    // OpenAI API 서버
     const API_ENDPOINT =
       "https://project-6cov5.vercel.app/api/chat";
 
-    // Google Sheets 저장용
     const LOG_ENDPOINT =
-      "https://script.google.com/macros/s/AKfycby194Baa9Kjax1h-V1moNB2UNSxJIlGw3OwMjNFosV5tlnHdg28D1qHMR-OieGNj-E6EQ/exec";
+      "https://script.google.com/macros/s/AKfycbyMF1jvZABPma8spg0FPDGaMZIgUzRAsxqGyZktpJJpEAZiPScKjo4AYIi1Vw7jHWM_lg/exec";
 
-    // 부적절한 단어 필터
     const bannedWords = [
-
       "시발", "씨발", "ㅅㅂ", "ㅆㅂ",
       "병신", "ㅂㅅ", "개새끼",
       "좆", "존나", "꺼져",
-
       "섹스", "야동", "자위",
       "보지", "자지",
-
       "강간", "성폭행",
-
       "죽고싶", "자살", "살인"
-
     ];
 
     function containsBannedWord(text){
-
       const normalized =
         text.toLowerCase().replace(/\s/g, "");
 
       return bannedWords.some(word =>
         normalized.includes(word)
       );
+    }
 
+    function setButtonsDisabled(disabled){
+      const buttons =
+        document.querySelectorAll("button");
+
+      buttons.forEach(btn => {
+        btn.disabled = disabled;
+        btn.style.opacity = disabled ? "0.6" : "1";
+      });
     }
 
     async function askAI(mode){
-
       const input =
         document.getElementById("userInput").value;
 
       const result =
         document.getElementById("result");
 
-      // 빈 입력 방지
       if(!input.trim()){
-
         result.innerText =
           "먼저 관심사나 연구 질문을 입력해주세요.";
-
         return;
-
       }
 
-      // 부적절한 표현 필터
       if(containsBannedWord(input)){
-
         result.innerText =
-          "교육 목적의 탐구 활동에 적절한 표현을 사용해주세요. 모든 질문은 기록됩니다.";
-
+          "교육 목적의 탐구 활동에 적절한 표현을 사용해주세요.";
         return;
-
       }
+
+      setButtonsDisabled(true);
 
       result.innerText =
         "AI가 질문을 만들고 있습니다...";
 
       let systemPrompt = "";
 
-      // 사회학으로 바라보기
       if(mode === "connect"){
-
         systemPrompt = `
 너는 고등학교 사회문제탐구 수업의 보조 교사다.
 
@@ -313,9 +283,8 @@
 - 질문 중심으로 답한다.
 - 여러 가능성을 제시한다.
 - 고등학생 수준에서 이해 가능하게 작성한다.
-- 지나치게 어려운 단어는 사용하지 않는다.
-- 해남, 전라남도와 연결지을 수 있으면 도움을 준다.
 - 답변은 너무 길지 않게 작성한다.
+- 학생이 너무 추상적인 내용을 입력하더라도 실제 조사와 자료 분석이 가능한 방향으로 구체화하도록 돕는다.
 
 반드시 아래 형식으로 답한다.
 
@@ -328,26 +297,21 @@
 3. 더 생각해볼 질문
 - 탐구 가능한 질문 4개 제시
 `;
-
       }
 
-      // 연구 질문 만들기
       else if(mode === "evaluate"){
-
         systemPrompt = `
 너는 고등학교 사회문제탐구 수업의 연구 질문 코치다.
 
 학생의 관심사나 질문을 탐구 가능한 사회문제 연구 질문으로 발전시킨다.
 
 중요 원칙:
-- 정답을 주지 않는다.
-- 보고서를 대신 작성하지 않는다.
+- 정답을 대신 주지 않는다.
+- 보고서나 결론을 작성하지 않는다.
 - 질문 중심으로 답한다.
-- 여러 가능성을 제시한다.
-- 고등학생 수준에서 이해 가능하게 작성한다.
-- 지나치게 어려운 단어는 사용하지 않는다.
-- 해남, 전라남도와 연결지을 수 있으면 도움을 준다.
-- 답변은 너무 길지 않게 작성한다.
+- 여러 방향을 제시한다.
+- 실제 조사 가능한 수준으로 제안한다.
+- 학생이 너무 추상적인 질문을 입력하더라도 실제 조사와 자료 분석이 가능한 방향으로 구체화하도록 돕는다.
 
 반드시 아래 형식으로 답한다.
 
@@ -361,71 +325,49 @@
 4. 스스로 점검할 질문
 - 3개 제시
 `;
-
       }
 
       try{
-
-        // OpenAI 요청
         const response = await fetch(API_ENDPOINT, {
-
           method:"POST",
-
           headers:{
             "Content-Type":"application/json"
           },
-
           body:JSON.stringify({
             systemPrompt:systemPrompt,
             studentInput:input
           })
-
         });
 
         const data =
           await response.json();
 
-        // 오류 처리
         if(data.error){
-
           result.innerText =
             "오류: " + data.error;
-
+          setButtonsDisabled(false);
           return;
-
         }
 
-        // 결과 출력
         result.innerText =
           data.answer;
 
-        // 구글 시트 저장
         await fetch(LOG_ENDPOINT, {
-
           method:"POST",
-
           body:JSON.stringify({
-
             input:input,
             mode:mode,
             answer:data.answer
-
           })
-
         });
 
-      }
-
-      catch(error){
-
+      } catch(error){
         result.innerText =
           "오류가 발생했습니다: " + error.message;
-
+      } finally {
+        setButtonsDisabled(false);
       }
-
     }
-
   </script>
-
 </body>
 </html>
