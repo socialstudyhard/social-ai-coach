@@ -237,7 +237,7 @@
 
     // Google Sheets 저장용
     const LOG_ENDPOINT =
-      "https://script.google.com/macros/s/AKfycbyMF1jvZABPma8spg0FPDGaMZIgUzRAsxqGyZktpJJpEAZiPScKjo4AYIi1Vw7jHWM_lg/exec";
+      "https://script.google.com/macros/s/AKfycby194Baa9Kjax1h-V1moNB2UNSxJIlGw3OwMjNFosV5tlnHdg28D1qHMR-OieGNj-E6EQ/exec";
 
     // 부적절한 단어 필터
     const bannedWords = [
@@ -288,7 +288,7 @@
       if(containsBannedWord(input)){
 
         result.innerText =
-          "교육 목적의 탐구 활동에 적절한 표현을 사용해주세요.";
+          "교육 목적의 탐구 활동에 적절한 표현을 사용해주세요. 모든 질문은 기록됩니다.";
 
         return;
 
@@ -313,6 +313,8 @@
 - 질문 중심으로 답한다.
 - 여러 가능성을 제시한다.
 - 고등학생 수준에서 이해 가능하게 작성한다.
+- 지나치게 어려운 단어는 사용하지 않는다.
+- 해남, 전라남도와 연결지을 수 있으면 도움을 준다.
 - 답변은 너무 길지 않게 작성한다.
 
 반드시 아래 형식으로 답한다.
@@ -338,11 +340,14 @@
 학생의 관심사나 질문을 탐구 가능한 사회문제 연구 질문으로 발전시킨다.
 
 중요 원칙:
-- 정답을 대신 주지 않는다.
-- 보고서나 결론을 작성하지 않는다.
+- 정답을 주지 않는다.
+- 보고서를 대신 작성하지 않는다.
 - 질문 중심으로 답한다.
-- 여러 방향을 제시한다.
-- 실제 조사 가능한 수준으로 제안한다.
+- 여러 가능성을 제시한다.
+- 고등학생 수준에서 이해 가능하게 작성한다.
+- 지나치게 어려운 단어는 사용하지 않는다.
+- 해남, 전라남도와 연결지을 수 있으면 도움을 준다.
+- 답변은 너무 길지 않게 작성한다.
 
 반드시 아래 형식으로 답한다.
 
