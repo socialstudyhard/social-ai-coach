@@ -6,13 +6,16 @@
   <title>관심에서 사회문제로</title>
 
   <style>
-    *{ box-sizing:border-box; }
+
+    *{
+      box-sizing:border-box;
+    }
 
     body{
       margin:0;
       padding:40px 20px;
       background:#f4f6fb;
-      font-family:Pretendard, "Apple SD Gothic Neo", sans-serif;
+      font-family:Pretendard, sans-serif;
       color:#222;
     }
 
@@ -33,40 +36,28 @@
     h1{
       margin:0 0 10px;
       font-size:32px;
-      letter-spacing:-0.04em;
     }
-
-    h3{ margin-top:0; }
 
     .subtitle{
       color:#555;
       line-height:1.7;
-      font-size:15px;
     }
 
     .credit{
       margin-top:18px;
       font-size:12px;
       color:#999;
-      letter-spacing:0.5px;
     }
 
     textarea{
       width:100%;
       min-height:160px;
-      border:1px solid #d9dce5;
+      border:1px solid #ddd;
       border-radius:14px;
       padding:16px;
       font-size:15px;
       line-height:1.6;
       resize:vertical;
-      outline:none;
-      font-family:inherit;
-    }
-
-    textarea:focus{
-      border-color:#6b7cff;
-      box-shadow:0 0 0 3px rgba(107,124,255,0.15);
     }
 
     .buttons{
@@ -83,17 +74,11 @@
       font-size:15px;
       font-weight:700;
       cursor:pointer;
-      transition:0.15s;
-      font-family:inherit;
-    }
-
-    button:hover{
-      transform:translateY(-1px);
     }
 
     button:disabled{
+      opacity:0.6;
       cursor:not-allowed;
-      transform:none;
     }
 
     .btn1{
@@ -114,7 +99,6 @@
       min-height:220px;
       white-space:pre-wrap;
       line-height:1.7;
-      font-size:15px;
     }
 
     .notice{
@@ -130,26 +114,17 @@
       color:#888;
       line-height:1.8;
       margin-top:40px;
-      padding-bottom:20px;
     }
 
-    @media(max-width:700px){
-      body{ padding:24px 14px; }
-
-      .title-box,
-      .card{ padding:22px; }
-
-      h1{ font-size:26px; }
-
-      .buttons{ grid-template-columns:1fr; }
-    }
   </style>
 </head>
 
 <body>
+
   <div class="container">
 
     <div class="title-box">
+
       <h1>관심에서 사회문제로</h1>
 
       <div class="subtitle">
@@ -160,24 +135,21 @@
       <div class="credit">
         created by 연지T
       </div>
+
     </div>
 
     <div class="card">
+
       <h3>나의 관심사에서 사회문제 찾기</h3>
 
       <textarea
         id="userInput"
         maxlength="500"
-        placeholder="#수면부족 #숏폼중독 #입시스트레스
-
-왜 고등학생들은 수면 부족을 경험할까?"
+        placeholder="#스카 #오운완 #도파민 #퍼컬 #최애 #현타"
       ></textarea>
 
-      <div class="notice">
-        관심사, 고민, 해시태그, 연구 질문 등을 자유롭게 입력해보세요.
-      </div>
-
       <div class="buttons">
+
         <button class="btn1" onclick="askAI('connect')">
           사회학으로 바라보기
         </button>
@@ -185,31 +157,29 @@
         <button class="btn2" onclick="askAI('evaluate')">
           사회문제로 연구 질문 만들기
         </button>
+
       </div>
+
     </div>
 
     <div class="card">
+
       <h3>AI 피드백</h3>
 
       <div class="result" id="result">
 입력 후 원하는 메뉴를 눌러주세요.
       </div>
 
-      <div class="notice">
-        ※ AI의 답변은 참고용입니다.<br>
-        실제 기사·통계·자료는 반드시 직접 확인해야 합니다.
-      </div>
     </div>
 
     <footer class="footer">
-      ⓒ 2026 신연지 | 관심에서 사회문제로<br>
-      본 도구는 교육 목적의 탐구 활동 지원을 위해 제작되었습니다.<br>
-      contact : socialstudyhard@gmail.com
+      ⓒ 2026 신연지 | 관심에서 사회문제로
     </footer>
 
   </div>
 
   <script>
+
     const API_ENDPOINT =
       "https://project-6cov5.vercel.app/api/chat";
 
@@ -217,35 +187,35 @@
       "https://script.google.com/macros/s/AKfycbyMF1jvZABPma8spg0FPDGaMZIgUzRAsxqGyZktpJJpEAZiPScKjo4AYIi1Vw7jHWM_lg/exec";
 
     const bannedWords = [
-      "시발", "씨발", "ㅅㅂ", "ㅆㅂ",
-      "병신", "ㅂㅅ", "개새끼",
-      "좆", "존나", "꺼져",
-      "섹스", "야동", "자위",
-      "보지", "자지",
-      "강간", "성폭행",
-      "죽고싶", "자살", "살인"
+      "시발","씨발","병신","섹스","자살"
     ];
 
     function containsBannedWord(text){
+
       const normalized =
-        text.toLowerCase().replace(/\s/g, "");
+        text.toLowerCase().replace(/\s/g,"");
 
       return bannedWords.some(word =>
         normalized.includes(word)
       );
+
     }
 
     function setButtonsDisabled(disabled){
+
       const buttons =
         document.querySelectorAll("button");
 
       buttons.forEach(btn => {
+
         btn.disabled = disabled;
-        btn.style.opacity = disabled ? "0.6" : "1";
+
       });
+
     }
 
     async function askAI(mode){
+
       const input =
         document.getElementById("userInput").value;
 
@@ -253,15 +223,21 @@
         document.getElementById("result");
 
       if(!input.trim()){
+
         result.innerText =
-          "먼저 관심사나 연구 질문을 입력해주세요.";
+          "먼저 입력해주세요.";
+
         return;
+
       }
 
       if(containsBannedWord(input)){
+
         result.innerText =
-          "교육 목적의 탐구 활동에 적절한 표현을 사용해주세요.";
+          "적절한 표현을 사용해주세요.";
+
         return;
+
       }
 
       setButtonsDisabled(true);
@@ -269,107 +245,74 @@
       result.innerText =
         "AI가 질문을 만들고 있습니다...";
 
-      let systemPrompt = "";
-
-      if(mode === "connect"){
-        systemPrompt = `
-너는 고등학교 사회문제탐구 수업의 보조 교사다.
-
-학생의 관심사, 고민, 해시태그, 일상 경험을 사회학적으로 바라보도록 돕는다.
-
-중요 원칙:
-- 정답을 주지 않는다.
-- 보고서를 대신 작성하지 않는다.
-- 질문 중심으로 답한다.
-- 여러 가능성을 제시한다.
-- 고등학생 수준에서 이해 가능하게 작성한다.
-- 답변은 너무 길지 않게 작성한다.
-- 학생이 너무 추상적인 내용을 입력하더라도 실제 조사와 자료 분석이 가능한 방향으로 구체화하도록 돕는다.
-- 해남, 전라남도, 한국 등 조사 가능한 범위를 고려해서 답변한다.
-
-반드시 아래 형식으로 답한다.
-
-1. 사회학적으로 연결해볼 수 있는 방향
-- 3가지 제시
-
-2. 개인 경험과 사회가 연결되는 지점
-- 짧게 설명
-
-3. 더 생각해볼 질문
-- 탐구 가능한 질문 4개 제시
-`;
-      }
-
-      else if(mode === "evaluate"){
-        systemPrompt = `
-너는 고등학교 사회문제탐구 수업의 연구 질문 코치다.
-
-학생의 관심사나 질문을 탐구 가능한 사회문제 연구 질문으로 발전시킨다.
-
-중요 원칙:
-- 정답을 대신 주지 않는다.
-- 보고서나 결론을 작성하지 않는다.
-- 질문 중심으로 답한다.
-- 여러 방향을 제시한다.
-- 실제 조사 가능한 수준으로 제안한다.
-- 학생이 너무 추상적인 질문을 입력하더라도 실제 조사와 자료 분석이 가능한 방향으로 구체화하도록 돕는다.
-- 해남, 전라남도, 한국 등 조사 가능한 범위를 고려해서 답변한다.
-
-반드시 아래 형식으로 답한다.
-
-1. 현재 주제의 가능성
-
-2. 조심할 점
-
-3. 연구 질문 후보
-- 4개 제시
-
-4. 스스로 점검할 질문
-- 3개 제시
-`;
-      }
-
       try{
+
         const response = await fetch(API_ENDPOINT, {
+
           method:"POST",
+
           headers:{
             "Content-Type":"application/json"
           },
+
           body:JSON.stringify({
-            systemPrompt:systemPrompt,
+
+            mode:mode,
             studentInput:input
+
           })
+
         });
 
         const data =
           await response.json();
 
         if(data.error){
+
           result.innerText =
             "오류: " + data.error;
+
           setButtonsDisabled(false);
+
           return;
+
         }
 
         result.innerText =
           data.answer;
 
         await fetch(LOG_ENDPOINT, {
+
           method:"POST",
+
           body:JSON.stringify({
+
             input:input,
             mode:mode,
             answer:data.answer
+
           })
+
         });
 
-      } catch(error){
-        result.innerText =
-          "오류가 발생했습니다: " + error.message;
-      } finally {
-        setButtonsDisabled(false);
       }
+
+      catch(error){
+
+        result.innerText =
+          "오류: " + error.message;
+
+      }
+
+      finally{
+
+        setButtonsDisabled(false);
+
+      }
+
     }
+
   </script>
+
 </body>
 </html>
