@@ -12,6 +12,38 @@ export default async function handler(req, res) {
 
     const { mode, studentInput } = req.body;
 
+    // 금지어 필터
+    const bannedWords = [
+
+      "시발",
+      "씨발",
+      "병신",
+      "섹스",
+      "자살"
+
+    ];
+
+    const normalized =
+      studentInput
+        .toLowerCase()
+        .replace(/\s/g, "");
+
+    const hasBadWord =
+      bannedWords.some(word =>
+        normalized.includes(word)
+      );
+
+    if(hasBadWord){
+
+      return res.status(400).json({
+
+        error:
+          "교육 목적에 적절한 표현을 사용해주세요."
+
+      });
+
+    }
+
     let systemPrompt = "";
 
     // 사회학으로 바라보기
