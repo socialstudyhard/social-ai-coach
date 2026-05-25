@@ -38,6 +38,10 @@
       font-size:32px;
     }
 
+    h3{
+      margin-top:0;
+    }
+
     .subtitle{
       color:#555;
       line-height:1.7;
@@ -58,6 +62,7 @@
       font-size:15px;
       line-height:1.6;
       resize:vertical;
+      font-family:inherit;
     }
 
     .buttons{
@@ -74,6 +79,7 @@
       font-size:15px;
       font-weight:700;
       cursor:pointer;
+      font-family:inherit;
     }
 
     button:disabled{
@@ -145,8 +151,12 @@
       <textarea
         id="userInput"
         maxlength="500"
-        placeholder="#스카 #오운완 #도파민 #퍼컬 #최애 #현타"
+        placeholder="#스카 #오운완 #퍼컬 #최애 #현타 #도파민"
       ></textarea>
+
+      <div class="notice">
+        관심사, 고민, 내 주변의 변화들을 자유롭게 입력해보세요.
+      </div>
 
       <div class="buttons">
 
@@ -186,21 +196,6 @@
     const LOG_ENDPOINT =
       "https://script.google.com/macros/s/AKfycbyMF1jvZABPma8spg0FPDGaMZIgUzRAsxqGyZktpJJpEAZiPScKjo4AYIi1Vw7jHWM_lg/exec";
 
-    const bannedWords = [
-      "시발","씨발","병신","섹스","자살"
-    ];
-
-    function containsBannedWord(text){
-
-      const normalized =
-        text.toLowerCase().replace(/\s/g,"");
-
-      return bannedWords.some(word =>
-        normalized.includes(word)
-      );
-
-    }
-
     function setButtonsDisabled(disabled){
 
       const buttons =
@@ -226,15 +221,6 @@
 
         result.innerText =
           "먼저 입력해주세요.";
-
-        return;
-
-      }
-
-      if(containsBannedWord(input)){
-
-        result.innerText =
-          "적절한 표현을 사용해주세요.";
 
         return;
 
